@@ -24,6 +24,29 @@ public class Define {
     public int getPowerHeight() { return powerHeight;}
     public int getPowerWidth() {return powerWidth;}
 
+
+    // game Exe
+    private String playerName = "AL";
+    private int score = 0;
+    private int toLevel = 0;
+    private int level = 1 + toLevel;
+    private long pressBuffer = 0;
+    private long blinkBUffer = 850;
+    private long lastBlinkBUffer = 0;
+    public String getPlayerName() {return playerName;}
+    public int getScore() {return score;}
+    public int getLevel() {return level;}
+    public long getPressBuffer() {return pressBuffer;}
+    public long getBlinkBuffer() {return blinkBUffer;}
+    public long getLastBlinkBuffer() {return lastBlinkBUffer;}
+    public int getToLevel() {return toLevel;}
+     public void setLevel(int level) {this.level = level;}
+    public void setScore(int score) {this.score = score;}
+    public void setPressBuffer(long pressBuffer) {this.pressBuffer = pressBuffer;}
+    public void setLastBlinkBuffer(long lastBlinkBuffer) {this.lastBlinkBUffer = lastBlinkBuffer;}
+
+
+
       // bullets
     ArrayList<Block> bulletArray;
     ArrayList<Block> alienBullets;
@@ -68,7 +91,12 @@ public class Define {
     public boolean isRight() { return right; }
     public void setLeft(boolean left) { this.left = left; }
     public void setRight(boolean right) { this.right = right; }
-    
+
+    // ship bullet fire
+    boolean onhold = false;
+    public boolean isHold() {return onhold;}
+    public void setHold(boolean onhold) {this.onhold = onhold;}
+
     //ship
     int shipWidth = tileSize;  // 64
     int shipHeight = tileSize/2;  ///32
@@ -93,11 +121,11 @@ public class Define {
     public int getAlienY() {return alienY;}
 
 
-     int alienRows = 2;
-     int alienColumn = 3;
-     int alienCount = 0; // num of aliens to defeat
-     int alienVelocityX = 4; //1;
-     int blinkFactor;
+    private int alienRows = 2;
+    private int alienColumn = 3;
+    private int alienCount = 0; // num of aliens to defeat
+    private int alienVelocityX = 3; //1;
+    private int blinkFactor;
     public int getAlienRows() {return alienRows;}
     public int getAlienColumn() {return alienColumn;}
     public int getAlienCount() {return alienCount;}
@@ -130,22 +158,5 @@ public class Define {
     public void setPaused(boolean paused) {this.paused = paused;}
     
 
-    // game Exe
-    private String playerName = "AL";
-    private int score = 0;
-    private int level = 1;
-    private long pressBuffer = 0;
-    private long blinkBUffer = 850;
-    private long lastBlinkBUffer = 0;
-    public String getPlayerName() {return playerName;}
-    public int getScore() {return score;}
-    public int getLevel() {return level;}
-    public long getPressBuffer() {return pressBuffer;}
-    public long getBlinkBuffer() {return blinkBUffer;}
-    public long getLastBlinkBuffer() {return lastBlinkBUffer;}
-    public void setLevel(int level) {this.level = level;}
-    public void setScore(int score) {this.score = score;}
-    public void setPressBuffer(long pressBuffer) {this.pressBuffer = pressBuffer;}
-    public void setLastBlinkBuffer(long lastBlinkBuffer) {this.lastBlinkBUffer = lastBlinkBuffer;}
-
+    
 }

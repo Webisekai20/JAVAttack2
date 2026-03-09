@@ -195,16 +195,17 @@ public class JAVAttack extends JPanel implements ActionListener, KeyListener {
             g.drawString("Level: " + def.getLevel(), 10, 50);
             g.drawString("Press:    P - Pause/Resume     Q - Quit", 0, 500);
             g.setFont(new Font("Arial", Font.ITALIC, 10));
-            g.drawString("Alien velocity: " + def.getAlienVelocityX(), 100, 100);
-            g.drawString("Alien count: " + def.getAlienCount(), 100, 110);
-            g.drawString("Alien bullet: " + (-def.getBulletVelocityY()-4+def.getLevel()), 100, 120);
-            g.drawString("Player bullet: " + def.getBulletVelocityY(), 100, 130);
-            g.drawString("Alien column: " + def.getAlienColumn(), 100, 140);
-            g.drawString("Alien rows: " + def.getAlienRows(), 100, 150);
-            g.drawString("Power Velocity: " + def.getPowerVelocity(), 100, 160);
-            g.drawString("Attack Size: " + def.getAttackSize(), 100, 170);
-            g.drawString("offset: " + def.getOffset(), 100, 180);
-            g.drawString("buffer Time Boost: " + def.getBufferTimeBoost(), 100, 190);
+            // g.drawString("Alien velocity: " + def.getAlienVelocityX(), 100, 100);
+            // g.drawString("Alien count: " + def.getAlienCount(), 100, 110);
+            // g.drawString("Alien bullet: " + (-def.getBulletVelocityY()-4+def.getLevel()), 100, 120);
+            // g.drawString("Player bullet: " + def.getBulletVelocityY(), 100, 130);
+            // g.drawString("Alien column: " + def.getAlienColumn(), 100, 140);
+            // g.drawString("Alien rows: " + def.getAlienRows(), 100, 150);
+            // g.drawString("Power Velocity: " + def.getPowerVelocity(), 100, 160);
+            // g.drawString("Attack Size: " + def.getAttackSize(), 100, 170);
+            // g.drawString("offset: " + def.getOffset(), 100, 180);
+            // g.drawString("Score Boost: " + def.getScoreBoost(), 100, 190);
+            // g.drawString("buffer Time Boost: " + def.getBufferTimeBoost(), 100, 190);
 
 
         }
@@ -278,7 +279,7 @@ public class JAVAttack extends JPanel implements ActionListener, KeyListener {
                 break;
             case SizeInc:
                 def.setAttackSize(def.getTileSize());
-                def.setOffset(16);
+                def.setOffset(14);
                 break;
             case BoostInc:
                 def.setScoreBoost(2);
@@ -353,7 +354,7 @@ public class JAVAttack extends JPanel implements ActionListener, KeyListener {
             Block alien = Assets.AlienArray.get(i);
             if(alien.isAlive()){
                 alien.setX(alien.getX() + def.getAlienVelocityX());
-                random = rand.nextInt(100 + (100 * def.getLevel())) + 1;
+                random = rand.nextInt(100 + (100 * def.getLevel())+def.getAlienCount()) + 1;
 
                 if(random == 1){  // chances are 1/100 frames. change the param in rand.nextInt() to change the chances
                     Assets.AlienBullets.add(new Block(alien.getX() + def.getAlienWidth()*15/32, alien.getY(),  def.getBulletWidth(), def.getBulletHeight(), null));
@@ -425,13 +426,14 @@ public class JAVAttack extends JPanel implements ActionListener, KeyListener {
                 i--;
                 continue;
             }
-            for (int ndx = 0; ndx < 4; ndx++) {
+            
+        }
+        for (int ndx = 0; ndx < 4; ndx++) {
                 ActivePowerup ap = Assets.ActivePowerupsArr.get(ndx);
                 if (ap.getIsActive() && getRemainingTimeMs(ap) == 0) {
                     deactivatePowerup(ndx);
                 }
             }
-        }
        
         // clear out of screen bullets
         while(Assets.BulletArray.size() >0 && (Assets.BulletArray.get(0).isUsed() || Assets.BulletArray.get(0).getY() < 0)){
@@ -457,7 +459,7 @@ public class JAVAttack extends JPanel implements ActionListener, KeyListener {
                 Assets.AlienArray.clear();
                 Assets.BulletArray.clear();
                 Assets.AlienBullets.clear();
-                def.setAlienVelocityX (4); //def.getAlienVelocityX()+1
+                def.setAlienVelocityX (3); //def.getAlienVelocityX()+1
                 createAliens();
                 if (Assets.getNewLevelSound() != null) {
                     Assets.getNewLevelSound().setFramePosition(0);
@@ -477,7 +479,7 @@ public class JAVAttack extends JPanel implements ActionListener, KeyListener {
         if (def.isBossAlive() && def.getBoss() != null) {
             Random bossBullet = new Random();
             int targetX = ship.getX() + ship.getWidth() / 2;
-            int fireRate = Math.max(8,40 - def.getLevel() * 2);
+            int fireRate = Math.max(10,40 - def.getLevel() * 2);
             int randomX = bossBullet.nextInt(def.getBoardWidth() - def.getBulletWidth());
             def.getBoss().setX(def.getBoss().getX() + def.getBossVelocityX());
             if (def.getBoss().getX() <= 0 || def.getBoss().getX() + def.getBoss().getWidth() >= def.getBoardWidth()) {
@@ -552,7 +554,7 @@ public class JAVAttack extends JPanel implements ActionListener, KeyListener {
             } else{
                 def.setAlienColumn( Math.min(def.getAlienColumn()+(def.getLevel()-1), def.getColumn()/2-2));
                 def.setAlienRows( Math.min(def.getAlienRows()+(def.getLevel()-1), def.getRow() - 6));
-                def.setAlienVelocityX (4); //def.getAlienVelocityX()+1
+               // def.setAlienVelocityX (2); //def.getAlienVelocityX()+1
                 createAliens();
                 if (Assets.getNewLevelSound() != null) {
                     Assets.getNewLevelSound().setFramePosition(0);
@@ -603,10 +605,10 @@ public class JAVAttack extends JPanel implements ActionListener, KeyListener {
             def.setBoss(null);
             def.setBossAlive(false);
             def.setScore(0);
-            def.setAlienVelocityX (4); // 1
+            def.setAlienVelocityX (3); // 1
             def.setAlienColumn(3);
             def.setAlienRows(2);
-            def.setLevel(1);
+            def.setLevel(1 + def.getToLevel());
             gameOver = false;
             def.setPaused(false);
             gameLoop.start();
@@ -619,7 +621,7 @@ public class JAVAttack extends JPanel implements ActionListener, KeyListener {
             } else{
                 def.setAlienColumn( Math.min(def.getAlienColumn()+(def.getLevel()-1), def.getColumn()/2-2));
                 def.setAlienRows( Math.min(def.getAlienRows()+(def.getLevel()-1), def.getRow() - 6));
-                def.setAlienVelocityX (4); //def.getAlienVelocityX()+1
+                def.setAlienVelocityX (3); //def.getAlienVelocityX()+1
                 createAliens();
                 if (Assets.getNewLevelSound() != null) {
                     Assets.getNewLevelSound().setFramePosition(0);
