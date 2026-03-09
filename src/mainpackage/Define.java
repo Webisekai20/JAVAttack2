@@ -133,7 +133,7 @@ public class Define {
     // game Exe
     private String playerName = "AL";
     private int score = 0;
-    private int level = 10;
+    private int level = 1;
     private long pressBuffer = 0;
     private long blinkBUffer = 850;
     private long lastBlinkBUffer = 0;
