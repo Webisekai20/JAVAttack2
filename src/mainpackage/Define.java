@@ -94,7 +94,7 @@ public class Define {
 
     // ship bullet fire
     boolean onhold = false;
-    public boolean isHold() {return onhold;}
+    public boolean onHold() {return onhold;}
     public void setHold(boolean onhold) {this.onhold = onhold;}
 
     //ship

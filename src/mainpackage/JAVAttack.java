@@ -4,8 +4,11 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Properties;
 import java.util.Random;
+import java.util.Set;
+
 import javax.swing.*;
 import javax.sound.sampled.Clip;
 
@@ -87,6 +90,10 @@ public class JAVAttack extends JPanel implements ActionListener, KeyListener {
             g2d.setFont(new Font("Algerian", Font.PLAIN, 50));
             g2d.setColor(Color.CYAN);
             g2d.drawString("JAVAttack", def.getBoardWidth()/2 - 150, def.getBoardHeight()/2-80);
+
+           
+
+
             g.setFont(new Font("Arial", Font.BOLD, 25));
             g.setColor(Color.WHITE);
             g.drawString("       Ranking", def.getBoardWidth()/2-100, def.getBoardHeight()/2+35);
@@ -111,6 +118,8 @@ public class JAVAttack extends JPanel implements ActionListener, KeyListener {
 
         }else if(Assets.getMainMenuMusic().isRunning()){
             Assets.getMainMenuMusic().stop();
+        }else{
+
         }
 
 
@@ -151,6 +160,8 @@ public class JAVAttack extends JPanel implements ActionListener, KeyListener {
 
         int textY = 70;          // start below the level text
         int lineStep = 16;       // vertical spacing
+        Set<String> drawnLabels = new HashSet<>();
+
 
         for (int ndx = 0; ndx < Assets.ActivePowerupsArr.size(); ndx++) {
             ActivePowerup ap = Assets.ActivePowerupsArr.get(ndx);
@@ -168,6 +179,9 @@ public class JAVAttack extends JPanel implements ActionListener, KeyListener {
                 case BoostInc: label = "Score Boost";  break;
                 case AttackSpeedInc: label = "Attack Speed"; break;
             }
+            if (drawnLabels.contains(label)) continue;
+            drawnLabels.add(label);
+
 
             g.drawString(label + ": " + seconds + "s", 10, textY);
             textY += lineStep;
@@ -239,9 +253,6 @@ public class JAVAttack extends JPanel implements ActionListener, KeyListener {
         }
         def.setAlienCount(Assets.AlienArray.size());
     }
-    // public void createBlinker(){
-
-    // }
     
     public void createBoss() {
         Block boss = new Block(
@@ -341,6 +352,19 @@ public class JAVAttack extends JPanel implements ActionListener, KeyListener {
             if(def.isRight() && ship.getX() + ship.getWidth() + def.getShipVelocityX() <= def.getBoardWidth() - 5){
                 ship.setX(ship.getX() + def.getShipVelocityX());
             }   
+        }
+    }
+     private void autoShoot(){
+        if(def.onHold()){
+            if (System.currentTimeMillis() - def.getShootBuffer() > def.getBufferTime()) {
+                Block bullet  = new Block(ship.getX() + def.getShipWidth()*15/32, ship.getY(), def.getBulletWidth() + def.getAttackSize(), def.getBulletHeight(), null);
+                Assets.BulletArray.add(bullet);
+                def.setShootBuffer(System.currentTimeMillis());
+                if (Assets.getBulletSound() != null) {
+                    Assets.getBulletSound().setFramePosition(0);
+                    Assets.getBulletSound().start();
+                }
+            }
         }
     }
 
@@ -531,6 +555,7 @@ public class JAVAttack extends JPanel implements ActionListener, KeyListener {
             if(!def.isPaused()){
                 move();
                 moveShip(); 
+                autoShoot();
             }repaint();
         }
     }
@@ -668,7 +693,12 @@ public class JAVAttack extends JPanel implements ActionListener, KeyListener {
         //         }
         //     }
         // }
-
+        if(!gameOver && gameStarted) {
+            // if(e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_UP){
+            if((e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_UP)){
+                def.setHold(true);
+            }
+        }
      
     }
 
@@ -687,15 +717,9 @@ public class JAVAttack extends JPanel implements ActionListener, KeyListener {
                
 
         if(!gameOver && gameStarted) {
-            // if(e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_UP &&  System.currentTimeMillis() - def.getShootBuffer() > def.getBufferTime()){
-            if((e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_UP) &&  System.currentTimeMillis() - def.getShootBuffer() > def.getBufferTime()){
-                Block bullet  = new Block(ship.getX() + def.getShipWidth()*15/32, ship.getY(), def.getBulletWidth() + def.getAttackSize(), def.getBulletHeight(), null);
-                Assets.BulletArray.add(bullet);
-                def.setShootBuffer(System.currentTimeMillis());
-                if (Assets.getBulletSound() != null) {
-                    Assets.getBulletSound().setFramePosition(0);
-                    Assets.getBulletSound().start();
-                }
+            // if(e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_UP){
+            if((e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_UP)){
+                def.setHold(false);
             }
             if (e.getKeyCode() == KeyEvent.VK_Q && gameOver == false) {
                 if (Assets.getQuitEffect() != null) {

@@ -1,6 +1,7 @@
 package mainpackage;
 
 import java.util.Random;
+import java.util.ArrayList;
 
 public class Target {
     Define def = new Define();
